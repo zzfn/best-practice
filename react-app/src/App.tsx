@@ -1,5 +1,4 @@
-import React, {memo} from 'react';
-import logo from './logo.svg';
+import React, {memo,Profiler} from 'react';
 import './App.css';
 import VirtualList from "./virtual-list";
 const Item = memo(({ index }:any) => (
@@ -22,15 +21,20 @@ const Item = memo(({ index }:any) => (
         row index {index}
     </div>
 ));
+function callBack(...arg:any) {
+    console.log(arg[2])
+}
 function App() {
   return (
     <div className="App">
-        <VirtualList
-            itemCount={10000}
-            height={300}
-            childHeight={30}
-            Item={Item}
-        />
+        <Profiler id={'test'} onRender={callBack}>
+            <VirtualList
+                itemCount={10000}
+                height={300}
+                childHeight={30}
+                Item={Item}
+            />
+        </Profiler>
     </div>
   );
 }
