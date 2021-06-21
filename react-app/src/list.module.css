@@ -1,9 +1,0 @@
-.ul{
-  height: 200px;
-  overflow-y: scroll;
-  list-style-type: none;
-}
-.li{
-  height: 20px;
-  border-bottom: 1px solid #61dafb;
-}

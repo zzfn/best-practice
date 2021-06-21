@@ -1,50 +1,77 @@
-import {useState, Profiler, useRef, useEffect} from "react";
-import type{UIEvent} from 'react'
-import styles from './list.module.css'
+import React, { memo, useMemo, useRef, useState, useEffect } from "react";
 
+// Generic hook for detecting scroll:
+const useScrollAware = () => {
+    const [scrollTop, setScrollTop] = useState(0);
+    const ref = useRef();
 
-const callback = (id: any, phase: any, actualDuration: any, baseDuration: any, startTime: any, commitTime: any) => {
-    console.log(`${id}'s ${phase} phase:`);
-    console.log(`Actual time: ${actualDuration}`);
-    console.log(`Base time: ${baseDuration}`);
-    console.log(`Start time: ${startTime}`);
-    console.log(`Commit time: ${commitTime}`);
-}
+    const onScroll = (e:any) =>
+        requestAnimationFrame(() => {
+            setScrollTop(e.target.scrollTop);
+        });
 
-function VirtualList() {
+    useEffect(() => {
+        const scrollContainer:any = ref.current;
 
-    function generate() {
-        setList(Array.from({length: 10000}).map((_, idx) => idx))
-        setBox(Array.from({length: 10000}).map((_, idx) => idx).slice(0,10))
-    }
-    const [list, setList] = useState<number[]>([])
-    const [box, setBox] = useState<number[]>([])
-    const vRef = useRef(null)
-    useEffect(()=>{
-        (vRef.current as any).addEventListener('scroll', handleScroll, false)
-    },[list])
-    function handleScroll(e: any) {
-        if(e.target.clientHeight+e.target.scrollTop===e.target.scrollHeight){
-            console.log(list.slice(11,20))
-            setBox(list.slice(11,20))
-        }
-    }
+        setScrollTop(scrollContainer.scrollTop);
+        scrollContainer.addEventListener("scroll", onScroll);
+        return () => scrollContainer.removeEventListener("scroll", onScroll);
+    }, []);
+
+    return [scrollTop, ref];
+};
+
+// VirtualScroll component
+const VirtualScroll = ({
+                           Item,
+                           itemCount,
+                           height,
+                           childHeight,
+                           renderAhread = 20
+                       }:any) => {
+    const [scrollTop, ref] = useScrollAware();
+    const totalHeight = itemCount * childHeight;
+
+    let startNode = Math.floor((scrollTop as any) / childHeight) - renderAhread;
+    startNode = Math.max(0, startNode);
+
+    let visibleNodeCount = Math.ceil(height / childHeight) + 2 * renderAhread;
+    visibleNodeCount = Math.min(itemCount - startNode, visibleNodeCount);
+
+    const offsetY = startNode * childHeight;
+
+    const visibleChildren = useMemo(
+        () =>
+            new Array(visibleNodeCount)
+                .fill(null)
+                .map((_, index) => (
+                    <Item key={index + startNode} index={index + startNode} />
+                )),
+        [startNode, visibleNodeCount, Item]
+    );
+
     return (
-        <div>
-            {list.length}
-            <h3>Creat large of DOMs：</h3>
-            <button onClick={generate}>Create Simple DOMs</button>
-            <Profiler id={'test'} onRender={callback}>
-                <ul ref={vRef} className={styles.ul}>
-                    <div >
-                        {box.length}
-                        {box.map(item => <li className={styles.li} key={item}>{item}</li>)}
-                    </div>
-                </ul>
-            </Profiler>
-
+        <div style={{ height, overflow: "auto" }} ref={(ref as any)}>
+            <div
+                className="viewport"
+                style={{
+                    overflow: "hidden",
+                    willChange: "transform",
+                    height: totalHeight,
+                    position: "relative"
+                }}
+            >
+                <div
+                    style={{
+                        willChange: "transform",
+                        transform: `translateY(${offsetY}px)`
+                    }}
+                >
+                    {visibleChildren}
+                </div>
+            </div>
         </div>
     );
-}
+};
 
-export default VirtualList;
+export default memo(VirtualScroll);
