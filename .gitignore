@@ -1,2 +1,2 @@
 /.idea/
-/javascript/promise/node_modules/
+**/node_modules/
