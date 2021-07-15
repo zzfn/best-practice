@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+  body{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
+  }
+</style>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<body>
+<div>
+  <h1>强制缓存</h1>
+  <button onclick="handleFetch()">ex缓存</button>
+  <button onclick="handleFetch1()">calche-control缓存</button>
+</div>
+<div>
+  <h1>协商缓存</h1>
+  <button onclick="handleFetch2()">Last-Modified</button>
+  <button onclick="handleFetch3()">ETag</button>
+</div>
+<script>
+async function handleFetch() {
+  const r=await fetch('http://localhost:3000/cache/Expired')
+  console.log(new Date().toUTCString())
+  console.table([...r.headers.entries()])
+  console.warn(await r.json())
+}
+async function handleFetch1() {
+  const r=await fetch('http://localhost:3000/cache/cache-control')
+  console.log(new Date().toUTCString())
+  console.table([...r.headers.entries()])
+  console.warn(await r.json())
+}
+async function handleFetch2() {
+  const r=await fetch('http://localhost:3000/cache/cache-control')
+  console.log(new Date().toUTCString())
+  console.table([...r.headers.entries()])
+  console.warn(await r.json())
+}
+async function handleFetch3() {
+  const r=await fetch('http://localhost:3000/cache/etag')
+  console.log(new Date().toUTCString())
+  console.table([...r.headers.entries()])
+  console.warn(await r.json())
+}
+</script>
+</body>
+</html>
