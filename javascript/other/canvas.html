@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<img crossorigin="anonymous" id="test" src="https://i.niupic.com/images/2021/07/20/9or5.jpeg"/>
+<script>
+    let imgObj = document.getElementById('test');
+    // 创建画布
+    let canvas = document.createElement('canvas');
+    canvas.setAttribute('width', imgObj.width);
+    canvas.setAttribute('height', imgObj.height);
+    let context = canvas.getContext('2d');
+    // 将图片画在画布上
+    context.drawImage(imgObj, 0, 0);
+    // 获取像素数据
+    let imgData = context.getImageData(0, 0, imgObj.width, imgObj.height);
+    let pixelData = imgData.data;
+    console.log(getCountsArr(pixelData))
+function getCountsArr(pixelData) {
+    let colorList = [];
+    let rgba = [];
+    let rgbaStr = "";
+    // 分组循环
+    for (let i = 0; i < pixelData.length; i += 4) {
+        rgba[0] = pixelData[i];
+        rgba[1] = pixelData[i + 1];
+        rgba[2] = pixelData[i + 2];
+        rgba[3] = pixelData[i + 3];
+
+        if (rgba.indexOf(undefined) !== -1 || pixelData[i + 3] === 0) {
+            continue;
+        }
+        // console.log("rgba", rgba);
+        rgbaStr = rgba.join(",");
+        if (rgbaStr in colorList) {
+            ++colorList[rgbaStr];
+        } else {
+            colorList[rgbaStr] = 1;
+        }
+    }
+    let arr=[]
+    console.log(colorList)
+    for (let prop in colorList) {
+        arr.push({
+            // 如果只获取rgb,则为`rgb(${prop})`
+            color: `rgba(${prop})`,
+            count: colorList[prop],
+        });
+    }
+// 数组排序
+    arr.sort((a, b) => {
+        return b.count - a.count;
+    });
+
+    return arr;
+}
+</script>
+</body>
+</html>
