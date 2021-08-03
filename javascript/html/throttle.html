@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+  .container{
+    width:200px;
+    height:200px;
+    background:#61dafb;
+  }
+</style>
+<body>
+<div class="container"></div>
+<script>
+  // function throttle(fn,wait=1000) {
+  //   let currentTime=Date.now()
+  //   return function (...arg) {
+  //     let now=Date.now()
+  //     if(now-currentTime>=wait){
+  //       fn.apply(this,arg)
+  //       currentTime=now
+  //     }
+  //   }
+  // }
+  function throttle(fn, wait) {
+      let timer = null
+      return function (...args) {
+          if (timer) return
+          timer = setTimeout(() => {
+              fn.apply(this, args)
+              timer = null
+          }, wait)
+      }
+  }
+  function handle(e) {
+      console.log(e)
+  }
+  const s=throttle(handle,300)
+document.querySelector('.container').addEventListener('mousemove',s)
+</script>
+</body>
+</html>
