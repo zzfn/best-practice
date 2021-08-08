@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+    class Update {
+        constructor(payload, nextUpdate) {
+            this.payload = payload;
+            this.nextUpdate = nextUpdate;
+        }
+    }
+
+    class UpdateQueue {
+        constructor() {
+            this.baseState = null
+            this.firstUpdate = null
+            this.lastUpdate = null
+        }
+
+        enqueueUpdate(update) {
+            if (this.firstUpdate === null) {
+                this.firstUpdate = this.lastUpdate = update
+            } else {
+                this.lastUpdate.nextUpdate = update
+                this.lastUpdate = update
+            }
+        }
+
+        forceUpdate() {
+            let currentState = this.baseState || {}
+            let currentUpdate = this.firstUpdate
+            while (currentUpdate) {
+                let nextUpdate = typeof currentUpdate.payload === 'function' ? currentUpdate.payload(currentState) : currentUpdate.payload
+                currentState = {...currentState, ...nextUpdate}
+                currentUpdate = currentUpdate.nextUpdate
+            }
+            this.baseState=currentState
+        }
+    }
+
+    let queue = new UpdateQueue();
+    queue.enqueueUpdate(new Update({number: 0}));
+    queue.enqueueUpdate(new Update(state => ({number: state.number + 1})))
+    queue.enqueueUpdate(new Update(state => ({number: state.number + 1})))
+    queue.forceUpdate()
+    console.log(queue.baseState)
+</script>
+</body>
+</html>
