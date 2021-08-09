@@ -31,8 +31,13 @@ Function.prototype.myCall = function (context, ...arg) {
 }
 
 function myNew(constructor) {
-    const obj={}
-    obj.__proto__=constructor.prototype
-    constructor.apply(obj)
-    return obj
+    if (!constructor.prototype) {
+        throw new Error("不是函数")
+    }
+    const obj = {}
+    obj.__proto__ = constructor.prototype
+    const result = constructor.apply(obj)
+    const isObj = typeof result === 'object' && !!result
+    const isFnc = typeof result === 'function'
+    return isFnc || isObj ? result : obj
 }
