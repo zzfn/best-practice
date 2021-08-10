@@ -41,3 +41,9 @@ function myNew(constructor) {
     const isFnc = typeof result === 'function'
     return isFnc || isObj ? result : obj
 }
+
+Function.prototype.myCreate = function (obj) {
+    const f=function () {}
+    f.prototype=obj
+    return new f()
+}
