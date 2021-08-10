@@ -1,23 +1,11 @@
-function Test() {
-    this.c = 3
+function F() {
+
 }
 
-Test.a = 1
-Test.prototype.b = 2
-
-class Person {
-    static a = 1
-
-    constructor() {
-        this.c = 3
-    }
-
-    b() {
-        return 2
-    }
-
-    d = 2
-}
-Person.e=3
-const a=new Person()
-console.log(a)
+F.prototype = {a: 1}
+const p1 = new F()
+console.log(p1.a)
+F.prototype = {a: 2}
+console.log(p1.a)
+const p2 = new F()
+console.log(p2.a)
