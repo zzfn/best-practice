@@ -29,7 +29,7 @@ Function.prototype.myCall = function (context, ...arg) {
     delete ctx.fn
     return result;
 }
-
+// call的性能比apply好，尤其是在传递给函数的参数超过三个的时候
 function myNew(constructor) {
     if (!constructor.prototype) {
         throw new Error("不是函数")
