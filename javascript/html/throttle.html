@@ -5,40 +5,59 @@
     <title>Title</title>
 </head>
 <style>
-  .container{
-    width:200px;
-    height:200px;
-    background:#61dafb;
-  }
+    .container {
+        width: 200px;
+        height: 200px;
+        background: #61dafb;
+    }
 </style>
 <body>
-<div class="container"></div>
+<input id="ipt" oninput="handleDebounce()" type="text"/>
 <script>
-  // function throttle(fn,wait=1000) {
-  //   let currentTime=Date.now()
-  //   return function (...arg) {
-  //     let now=Date.now()
-  //     if(now-currentTime>=wait){
-  //       fn.apply(this,arg)
-  //       currentTime=now
-  //     }
-  //   }
-  // }
-  function throttle(fn, wait) {
-      let timer = null
-      return function (...args) {
-          if (timer) return
-          timer = setTimeout(() => {
-              fn.apply(this, args)
-              timer = null
-          }, wait)
+
+    function debounce(fn,delay=1000) {
+        let timer=null
+        return function (...arg) {
+            if(timer){
+                clearTimeout(timer)
+            }
+            timer=setTimeout(()=>{
+                fn.apply(this,arg)
+                timer = null
+            },delay)
+        }
+    }
+    function throttle(fn,wait=1000) {
+      let currentTime=Date.now()
+      return function (...arg) {
+        let now=Date.now()
+        if(now-currentTime>=wait){
+          fn.apply(this,arg)
+          currentTime=now
+        }
       }
-  }
-  function handle(e) {
-      console.log(e)
-  }
-  const s=throttle(handle,300)
-document.querySelector('.container').addEventListener('mousemove',s)
+    }
+    // function throttle(fn, wait=1000) {
+    //     let timer = null
+    //     return function (...args) {
+    //         if (timer) return
+    //         timer = setTimeout(() => {
+    //             fn.apply(this, args)
+    //             timer = null
+    //         }, wait)
+    //     }
+    // }
+
+    function handle(e) {
+        console.log(e)
+    }
+
+    function test(n=2) {
+        const x = document.getElementById("ipt");
+        console.log(x.value)
+
+    }
+    const handleDebounce = throttle(test)
 </script>
 </body>
 </html>
