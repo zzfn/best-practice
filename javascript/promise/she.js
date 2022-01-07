@@ -50,6 +50,7 @@ function requestUrlsReq(urls = [], limit = 2) {
                     path().then(r => {
                         count++
                         result[idx] = r
+                        // result.push(r)
                         next()
                     })
                 }
@@ -69,7 +70,7 @@ function request(url, wait) {
 }
 
 console.time('start')
-requestUrls(list).then(r => {
+requestUrlsReq(list).then(r => {
     console.log(r)
     console.timeEnd('start')
 })
