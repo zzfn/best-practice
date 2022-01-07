@@ -1,59 +1,37 @@
+const list = [() => request(1, 800), () => request(2, 500), () => request(3, 200),()=>request(1, 800),]
 
-const list = [new Promise(resolve => {
-    setTimeout(() => {
-        resolve(2)
-    }, 2000)
-}), 3, Promise.resolve(4)]
-Promise.myAll = function (arr) {
-    return new Promise((resolve, reject) => {
-        let result=[]
-        let count=0
-        for(let n in Object.keys(arr)){
-            Promise.resolve(arr[n]).then(r=>{
-                result[n]=r
-                ++count
-                if(count===arr.length){
-                    resolve(result)
-                }
-            }).catch(e=>{
-                reject(e)
-            })
-        }
-    })
-}
-Promise.myAll(list).then(res => {
-    console.log(res)
-}).catch(e=>{
-    console.log(e)
-})
 function requestUrls(urls = []) {
-    let currentUrls = urls.slice(),result = [], pendingPromise = Promise.resolve();
-
-    return new Promise((resolve) => {
-        function next(){
-            pendingPromise.then((data) => {
-                if(data) result.push(data);
-                const url = currentUrls.shift();
-                if(!url) {
-                    resolve(result)
-                    return;
-                };
-
-                pendingPromise = request(url, Math.random() * 2000);
-                next()
-
-            })
+    return new Promise((resolve, reject) => {
+        function next(paths, result = []) {
+            if (paths.length === 0) {
+                resolve(result)
+            } else {
+                const path = paths.shift()
+                path().then(r => {
+                    next(paths.slice(), result.concat(r))
+                })
+            }
         }
-
-        next();
-
+        next(urls, [])
     })
-
 }
 
 function request(url, wait) {
-    return new Promise(resolve => setTimeout(() => {
-        console.log(url, wait);
-        resolve(url);
-    }, wait));
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(url)
+        }, wait)
+    })
 }
+
+console.time('start')
+requestUrls(list).then(r => {
+    console.log(r)
+    console.timeEnd('start')
+})
+// function test(urls) {
+//     return urls.reduce((prevPromise, url) => prevPromise.then((r) => ), Promise.resolve())
+// }
+// test(list).then(r => {
+//     console.log(r)
+// })
