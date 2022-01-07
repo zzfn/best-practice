@@ -2,7 +2,7 @@
   "name": "promise",
   "version": "1.0.0",
   "description": "",
-  "main": "all.js",
+  "main": "she.js",
   "scripts": {
     "test": "promises-aplus-tests promise.js"
   },
