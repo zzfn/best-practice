@@ -29,6 +29,7 @@ Function.prototype.myCall = function (context, ...arg) {
     delete ctx.fn
     return result;
 }
+
 // call的性能比apply好，尤其是在传递给函数的参数超过三个的时候
 function myNew(constructor) {
     if (!constructor.prototype) {
@@ -66,4 +67,14 @@ function myInstanceof(left, right) {
         }
         leftProto = leftProto.__proto__
     }
+}
+
+Array.prototype.myFlat = function (level = 1) {
+    return this.reduce((prev, curr) => {
+        if (Array.isArray(curr)) {
+            return prev.concat(level ? curr.myFlat(level - 1) : curr)
+        } else {
+            return prev.concat(curr)
+        }
+    }, [])
 }
