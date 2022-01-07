@@ -2,7 +2,8 @@ const list = [
     () => request(1, 800),
     () => request(2, 500),
     () => request(3, 200),
-    () => request(4, 800),]
+    () => request(4, 800),
+]
 
 /**
  * 串行
@@ -42,12 +43,13 @@ function requestUrlsReq(urls = [], limit = 2) {
         function next() {
             if (urls.length === 0 && count === limit) {
                 resolve(result)
-            } else if (urls.length) {
-                while (count) {
+            } else {
+                while (count && urls.length) {
                     const idx = index++
                     const path = urls.shift()
                     count--
                     path().then(r => {
+                        console.log(result)
                         count++
                         result[idx] = r
                         // result.push(r)
@@ -70,7 +72,7 @@ function request(url, wait) {
 }
 
 console.time('start')
-requestUrlsReq(list).then(r => {
+requestUrlsReq(list, 3).then(r => {
     console.log(r)
     console.timeEnd('start')
 })
