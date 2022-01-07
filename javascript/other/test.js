@@ -1,11 +1,11 @@
-function F() {
-
+let a = {
+    num: 0,
+    valueOf: function () {
+        return this.num += 1
+    }
 }
-
-F.prototype = {a: 1}
-const p1 = new F()
-console.log(p1.a)
-F.prototype = {a: 2}
-console.log(p1.a)
-const p2 = new F()
-console.log(p2.a)
+if (a === 1 && a === 2 && a === 3) {
+    console.log('2')
+} else {
+    console.log(a)
+}

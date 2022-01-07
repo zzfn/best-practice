@@ -1,18 +1,21 @@
-const list = [() => request(1, 800), () => request(2, 500), () => request(3, 200),()=>request(1, 800),]
+const list = [() => request(1, 800), () => request(2, 500), () => request(3, 200), () => request(4, 800),]
 
 function requestUrls(urls = []) {
+    let result = []
     return new Promise((resolve, reject) => {
-        function next(paths, result = []) {
+        function next(paths) {
             if (paths.length === 0) {
                 resolve(result)
             } else {
                 const path = paths.shift()
                 path().then(r => {
-                    next(paths.slice(), result.concat(r))
+                    result.push(r)
+                    next(paths.slice())
                 })
             }
         }
-        next(urls, [])
+
+        next(urls)
     })
 }
 
