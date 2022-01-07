@@ -2,7 +2,7 @@
   "name": "best-practice",
   "version": "1.0.0",
   "description": "个人学习代码片段仓库",
-  "main": "ListNode.js",
+  "main": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
