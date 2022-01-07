@@ -1,4 +1,5 @@
 packages:
   - 'javascript/**'
   - 'react-app'
+  - 'rollup'
   - '!**/test/**'
