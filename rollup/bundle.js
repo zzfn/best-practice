@@ -1,11 +1,13 @@
-'use strict';
-
 function say1(name) {
-    console.log(`${name}1`);
+  console.log(`${name}1`);
 }
 
-function main () {
-    say1('aaa');
+function test() {
+  Object.entries({
+    a: 1,
+    b: 2
+  });
+  say1('aaa');
 }
 
-module.exports = main;
+export { test as default };
