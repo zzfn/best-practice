@@ -11,14 +11,14 @@
 </ul>
 </body>
 <script>
-    let routerView = routeView
+    let routerView = document.querySelector('#routeView');
     window.addEventListener('DOMContentLoaded', onLoad)
     window.addEventListener('popstate', ()=>{
         routerView.innerHTML = location.pathname
     })
     function onLoad () {
         routerView.innerHTML = location.pathname
-        var linkList = document.querySelectorAll('a[href]')
+        let linkList = document.querySelectorAll('a[href]')
         linkList.forEach(el => el.addEventListener('click', function (e) {
             e.preventDefault()
             history.pushState(null, '', el.getAttribute('href'))

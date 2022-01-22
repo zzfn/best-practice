@@ -13,7 +13,7 @@
 </ul>
 </body>
 <script>
-    let routerView = routeView
+    let routerView = document.querySelector('#routeView');
     window.addEventListener('hashchange', ()=>{
         let hash = location.hash;
         routerView.innerHTML = hash
