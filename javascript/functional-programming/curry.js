@@ -32,11 +32,12 @@ const curry1 = (fn, ...args) =>
         : (..._args) => curry1(fn, ...args, ..._args);
 
 
-var fn = curry1(function(a, b, c) {
+var fn = curry1(function (a, b, c) {
     return [a, b, c];
 });
-const currAdd=curry1(fn)
-console.log(currAdd(1,2,3))
+const currAdd = curry1(fn)
+console.log(currAdd(1, 2, 3))
 console.log(currAdd(1)(2)(3))
-console.log(currAdd(1)(2,3))
-const curry=(fn,...arg)=>arg.length>=fn.length?fn(...arg):(..._arg)=>curry(fn,...arg,..._arg)
+console.log(currAdd(1)(2, 3))
+// const curry=(fn,...arg)=>arg.length>=fn.length?fn(...arg):(..._arg)=>curry(fn,...arg,..._arg)
+const curry = (fn, ...args) => args.length < fn.length ? curry.bind(null, fn, ...args) : fn(...args);
