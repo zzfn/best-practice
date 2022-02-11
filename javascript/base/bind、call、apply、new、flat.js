@@ -48,7 +48,7 @@ function myNew(constructor) {
 Function.prototype.myNew = function (...arg) {
     const obj = Object.create(this.prototype)
     const result = this.apply(obj, arg)
-    return typeof result  === 'object' ? result : obj;
+    return typeof result === 'object' && result !== null ? result : obj
 }
 Function.prototype.myCreate = function (obj) {
     const f = function () {
