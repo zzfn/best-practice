@@ -1,3 +1,4 @@
+//使用apply版本
 Function.prototype.myBind = function (context, ...arg) {
     const _this = this
     return function F(..._arg) {
@@ -5,6 +6,7 @@ Function.prototype.myBind = function (context, ...arg) {
         return _this.apply(context, [...arg, ..._arg])
     }
 }
+//不使用apple版本
 Function.prototype.myBind1 = function (context, ...arg) {
     const ctx = context || window
     const fn = Symbol()
@@ -46,7 +48,7 @@ function myNew(constructor) {
 Function.prototype.myNew = function (...arg) {
     const obj = Object.create(this.prototype)
     const result = this.apply(obj, arg)
-    return (typeof result === 'object' && result) || obj
+    return typeof result  === 'object' ? result : obj;
 }
 Function.prototype.myCreate = function (obj) {
     const f = function () {
