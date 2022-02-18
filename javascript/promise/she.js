@@ -82,3 +82,27 @@ requestUrlsReq(list, 3).then(r => {
 // test(list).then(r => {
 //     console.log(r)
 // })
+const asyncAdd = (a, b) => {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve(a + b)
+        }, 1000)
+    })
+}
+
+function add(...args) {
+    let params = args.slice()
+    let count = 0
+    let promiseArray = []
+    return new Promise(resolve => {
+        function run() {
+            while (params.length>=2) {
+                const [a, b] = params.splice(0, 2)
+                promiseArray.push(asyncAdd(a, b))
+            }
+        }
+        run()
+    })
+}
+
+add([1, 2, 3, 4, 5])
