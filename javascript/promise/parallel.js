@@ -1,6 +1,6 @@
 function parallel(promises, maxLimit) {
     let index = 0;
-    let count = maxLimit
+    let count = maxLimit;
     let result = [];
     return new Promise((resolve, reject) => {
         function next() {
@@ -11,10 +11,10 @@ function parallel(promises, maxLimit) {
                 (res) => {
                     count++
                     result[idx] = res;
-                    if (index < promises.length) {
-                        next();
-                    } else {
-                        count === maxLimit && resolve(result);
+                    if (count === maxLimit && index === promises.length) {
+                        resolve(result)
+                    } else if (index < promises.length) {
+                        next()
                     }
                 },
                 (error) => {
@@ -52,7 +52,6 @@ function requestUrlsReq(urls = [], limit = 2) {
                         console.log(result)
                         count++
                         result[idx] = r
-                        // result.push(r)
                         next()
                     })
                 }
@@ -62,6 +61,7 @@ function requestUrlsReq(urls = [], limit = 2) {
         next()
     })
 }
+
 const list = [
     () => request(1, 800),
     () => request(2, 500),
