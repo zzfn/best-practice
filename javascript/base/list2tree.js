@@ -33,3 +33,7 @@ console.time('list2tree')
 console.log(list2tree(arr))
 console.timeEnd('list2tree')
 
+
+function tree2list(tree) {
+
+}
