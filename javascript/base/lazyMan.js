@@ -1,30 +1,42 @@
-function _lazyMan(params) {
-    this.queue = []
-    this.run = function () {
-        const task = this.queue.unshift()
+class _lazyMan {
+    constructor(name) {
+        const task = () => {
+            console.log(`Hi! This is ${name}`);
+            this.next();
+        }
+        this.taskList = [];
+        this.taskList.push(task);
+        setTimeout(()=>{
+            this.next();
+        },0);
     }
-    this.sayHi = function (params) {
-        console.log(`Hi!This is ${params}!`)
+
+    next() {
+        const task = this.taskList.shift(); // 取第一个任务执行
+        task && task();
     }
-    this.eat = function (params) {
-        console.log(`Eat ${params}~`)
+
+    eat(food) {
+        this.taskList.push(() => {
+            console.log(`eating ${food}`);
+            this.next();
+        });
         return this
     }
-    this.sleep = function (params) {
-        setTimeout(function () {
-            console.log(`Wake for ${params}s!`)
-        }, params * 1000)
-        return this
-    }
-    this.sleepFirst = function (params) {
-        console.log(`Wake for ${params}s!`)
+
+    sleep(time) {
+        this.taskList.push(() => {
+            setTimeout(() => {
+                console.log(`sleeping ${time}`);
+                this.next();
+            }, time * 1000);
+        });
         return this
     }
 }
 
-function lazyMan(params) {
-    return new _lazyMan(params)
+function lazyMan(name) {
+    return new _lazyMan(name);
 }
 
-// lazyMan('zz').eat('lunch').sleep('3').eat('dinner')
-lazyMan('zz').eat('lunch').sleepFirst('3').eat('dinner')
+lazyMan('lazy').eat('apple').sleep(2).eat('banana');
