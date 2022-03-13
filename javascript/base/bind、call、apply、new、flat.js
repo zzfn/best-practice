@@ -40,9 +40,7 @@ function myNew(constructor) {
     const obj = {}
     obj.__proto__ = constructor.prototype
     const result = constructor.apply(obj)
-    const isObj = typeof result === 'object' && !!result
-    const isFnc = typeof result === 'function'
-    return isFnc || isObj ? result : obj
+    return result instanceof Object ? result : obj
 }
 
 Function.prototype.myNew = function (...arg) {
