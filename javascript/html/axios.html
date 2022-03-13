@@ -1,10 +1,73 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
 <body>
-<div>1</div>
+<button onclick="handleFetch()">请求</button>
+<button onclick="cancel()">取消</button>
 <script>
-    let div1 = document.getElementsByTagName('div')[0]
-    div1.innerText = 'time.geekbang'
+    const pendingRequest=new Map()
+    const instance =axios.create()
+    function generateReqKey(config) {
+        console.log(config)
+        return [config.url,config.method,JSON.stringify(config.data),JSON.stringify(config.params)].join('-')
+    }
+    function addPendingRequest(config) {
+        const requestKey = generateReqKey(config);
+        config.cancelToken = config.cancelToken || new axios.CancelToken((cancel) => {
+            if (!pendingRequest.has(requestKey)) {
+                pendingRequest.set(requestKey, cancel);
+            }
+        });
+    }
+    function removePendingRequest(config) {
+        const requestKey = generateReqKey(config);
+        if (pendingRequest.has(requestKey)) {
+            const cancelToken = pendingRequest.get(requestKey);
+            cancelToken(`${requestKey}重复请求了`);
+            pendingRequest.delete(requestKey);
+        }
+    }
+
+    instance.interceptors.request.use(
+        config=>{
+            removePendingRequest(config); // 检查是否存在重复请求，若存在则取消已发的请求
+            addPendingRequest(config);
+            return config
+        },
+        error=>{
+            return Promise.reject(error);
+        }
+    )
+    instance.interceptors.response.use(
+        response=>{
+            removePendingRequest(response.config);
+            return response
+        },
+        error=>{
+            return Promise.reject(error);
+        }
+    )
+    async function handleFetch() {
+        const r = await Promise.all([request(), request(), request()])
+        console.log(r)
+    }
+    async function request() {
+        try {
+            return await instance({
+                url: 'https://api.zzfzzf.com/article/non/page',
+                params:{a:1},
+                data:{b:2}
+            })
+        } catch (e) {
+            console.log(e)
+        }
+    }
+    async function cancel() {
+    }
 </script>
-<div>test</div>
 </body>
 </html>
