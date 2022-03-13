@@ -1,10 +1,19 @@
 //使用apply版本
 Function.prototype.myBind = function (context, ...arg) {
+    const ctx = context || window;
+    ctx.fn = this;
     const _this = this
-    return function F(..._arg) {
-        if (this instanceof F) return new _this(...arg, ..._arg)
-        return _this.apply(context, [...arg, ..._arg])
+    const F = function () {
     }
+    F.prototype = ctx.fn.prototype;
+    const ret = function (..._args) {
+        if (this instanceof F) {
+            return new _this(...arg, ..._args)
+        }
+        return ctx.fn(...arg, ..._args)
+    }
+    ret.prototype = new F();
+    return ret
 }
 //不使用apple版本
 Function.prototype.myBind1 = function (context, ...arg) {
