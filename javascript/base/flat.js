@@ -23,4 +23,3 @@ Array.prototype.myFlat = function (level = 1) {
         }
     }, []) : this
 }
-console.log([1, 2, [3, [4, [5]]]].myFlat())
