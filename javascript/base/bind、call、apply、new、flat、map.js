@@ -87,3 +87,21 @@ Array.prototype.myFlat = function (level = 1) {
         }
     }, [])
 }
+//![Map](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Map)
+// 使用reduce实现map
+Array.prototype.myMap1 = function (fn, context) {
+    const arr = this
+    return arr.reduce((prev, curr, index, arr) => {
+        prev.push(fn.call(context, curr, index, arr))
+        return prev
+    }, [])
+}
+// 使用for循环实现map
+Array.prototype.myMap2 = function (fn, context) {
+    const arr = this
+    const result = []
+    for (let i = 0; i < arr.length; i++) {
+        result.push(fn.call(context, arr[i], i, arr))
+    }
+    return result
+}
