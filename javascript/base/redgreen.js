@@ -22,4 +22,4 @@ function redYellowRed() {
     next()
 }
 
-redYellowRed()
+export { redYellowRed }
